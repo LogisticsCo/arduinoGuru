@@ -53,6 +53,9 @@ void loop(){
       Serial.println("correct");
        Serial.println(confirmPasscode);
        }
+       else{
+        Serial.println("incorrect");
+       }
     }
 }
   
