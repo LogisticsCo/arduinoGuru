@@ -24,8 +24,10 @@ int tv = 24;
 int officeUp = 25;  //officeDown
 int lappy = 26;
 int doorUp = 27;   // bedUnder
-
-
+int irchair=28;
+int tvState=0;
+int lappystate=0;
+bool 
 //define the symbols on the buttons of the keypads
 char hexaKeys[ROWS][COLS] = {
   {'1','4','7','*'},
@@ -72,45 +74,72 @@ void reset(){
   
 void passwordChecker(){
   lcd.setCursor(0,0);
-       lcd.print("Enter passcode :");
-   char customKey = customKeypad.getKey();
+  lcd.print("Enter passcode :");
+  char customKey = customKeypad.getKey();
   
   if (customKey){
-    
     lcd.setCursor(i,1);
-       lcd.print("*");
+    lcd.print("*");
     confirmPasscode[i]=customKey;
-    
-   i++;
-  }
-  if(i == pass_length-1)
-  {
-      if(!strcmp(passcode,confirmPasscode))
-      {
-       lcd.clear();
-       lcd.print("correct");
-       digitalWrite(accessLed,HIGH);
-       delay(2000);
-       digitalWrite(accessLed,HIGH);
-       i=0;
-       
+    i++; }
 
-       }
-       else{lcd.clear();
+  if(i == pass_length-1)
+    {
+        if(!strcmp(passcode,confirmPasscode))
+          {
+            lcd.clear();
+            lcd.print("correct");
+            digitalWrite(accessLed,HIGH);
+            delay(2000);
+            digitalWrite(accessLed,LOW);
+            i=0;
+            systemUP();
+           }
+        else{lcd.clear();
         lcd.print("incorrect");
-        
-        delay(3000); 
-         reset();
+        reset();
        }
     }
 }
 void systemUP(){
         digitalWrite(lappy,HIGH);
-       digitalWrite(tv,HIGH);
+        digitalWrite(tv,HIGH);
+        digitalWrite(officeUp,LOW);
 }
+void ThinkThru(){
+  digitalWrite(officeUp,HIGH);
+}
+void ChairOccupied()
+  {
+    tvState= digitalRead(tv);
+    lappystate= digitalRead(lappy);
 
+    if(irchair==1 && tvstate=0 && lappystate=0)
+    {
+        passwordChecker();
+    }
+
+    if(irchair==0 && tvstate=0 && lappystate=0)
+    {
+      digitalWrite(officeUp,LOW);
+    }
+
+    if(irchair==0 && tvstate=1 && lappystate=1)
+    {
+      delay(30000);
+      int state=digitalRead(irchair);
+        if(state=0)
+        {
+          digitalWrite(tv,LOW);
+          digitalWrite(lappy,LOW);
+          digitalWrite(officeUp,HIGH);
+          passwordChecker();
+        }
+    }
+
+}
 void loop(){
-passwordChecker();
+
 }
    
   
