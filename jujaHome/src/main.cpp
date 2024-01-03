@@ -13,7 +13,9 @@ LiquidCrystal_I2C lcd(0x27,16,2);  // set the LCD address to 0x27 for a 16 chars
 const byte ROWS = 4; //four rows
 const byte COLS = 4; //four columns
 int i=0;
+int f=0;  // for shutdown function
 #define pass_length  5
+#define leng 2  //length to establish off state
 char passcode[pass_length] ="1234";
 char confirmPasscode[pass_length]="" ;
 int statusLed = 13;
@@ -135,8 +137,45 @@ void ChairOccupied()
           digitalWrite(officeUp,HIGH);
           passwordChecker();
         }
+        else{
+          digitalWrite(tv,HIGH);
+          digitalWrite(lappy,HIGH);
+          digitalWrite(officeUp,LOW);
+        }
     }
+    if(irchair == 1 && tvState == 1 && lappystate == 1)
 
+
+}
+void shutdown(){
+  char customKey = customKeypad.getKey();
+
+  char off[leng] ="D"
+  char sleep[leng]="#"
+  char sureoff =""
+    if (customKey)
+        {
+          sureoff[f]=customKey;
+        }
+    
+    if(f == leng-1)
+       {
+          if(!strcmp(off,sureoff))
+           {
+            digitalWrite(tv,LOW);
+            digitalWrite(lappy,LOW);
+            digitalWrite(officeUp,LOW);
+            
+            }
+          if(!strcmp(sleep,sureoff))
+            {
+            digitalWrite(tv,LOW);
+            digitalWrite(lappy,LOW);
+            digitalWrite(officeUp,LOW);
+            digitalWrite(doorUp,LOW);
+            
+            }
+        }
 }
 void loop(){
 
