@@ -1,27 +1,29 @@
+//importation of all our libraries 
 #include <Arduino.h>
-
 #include <Keypad.h>
 #include <Wire.h> 
 #include <LiquidCrystal_I2C.h>
 
+// setting up our display
 LiquidCrystal_I2C lcd(0x27,16,2);  // set the LCD address to 0x27 for a 16 chars and 2 line display
+// the values above change from one lcd to another and it is therefore prudent to establish
+//those that relate to your lcd.
 
-
-
+//declaration of variables
 const byte ROWS = 4; //four rows
 const byte COLS = 4; //four columns
-
-
-//we create 2 arrays one with the password and the other, empty
-
 int i=0;
-
 #define pass_length  5
-
 char passcode[pass_length] ="1234";
-
 char confirmPasscode[pass_length]="" ;
-
+int statusLed = 13;
+int accessLed = 11;
+int fan =22;
+int bedSide = 23;
+int tv = 24;
+int officeUp = 25;  //officeDown
+int lappy = 26;
+int doorUp = 27;   // bedUnder
 
 
 //define the symbols on the buttons of the keypads
@@ -47,6 +49,15 @@ void setup(){
   lcd.setCursor(1,1);
   lcd.print("initializing ..");
   lcd.clear();
+  pinMode(fan,OUTPUT);
+  pinMode(accessLed,OUTPUT);
+  pinMode(statusLed,OUTPUT);
+  pinMode(bedSide,OUTPUT);
+  pinMode(tv,OUTPUT);
+  pinMode(lappy,OUTPUT);
+  pinMode(doorUp,OUTPUT);
+  pinMode(officeUp,OUTPUT);
+  digitalWrite(statusLed,HIGH);
   Serial.begin(9600);
 }
 
@@ -78,10 +89,11 @@ void passwordChecker(){
       {
        lcd.clear();
        lcd.print("correct");
+       digitalWrite(accessLed,HIGH);
+       delay(2000);
+       digitalWrite(accessLed,HIGH);
+       i=0;
        
-       delay(5000);
-       
-       reset();
 
        }
        else{lcd.clear();
@@ -91,6 +103,10 @@ void passwordChecker(){
          reset();
        }
     }
+}
+void systemUP(){
+        digitalWrite(lappy,HIGH);
+       digitalWrite(tv,HIGH);
 }
 
 void loop(){
