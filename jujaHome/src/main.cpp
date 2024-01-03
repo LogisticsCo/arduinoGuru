@@ -1,6 +1,12 @@
 #include <Arduino.h>
 
 #include <Keypad.h>
+#include <Wire.h> 
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27,16,2);  // set the LCD address to 0x27 for a 16 chars and 2 line display
+
+
 
 const byte ROWS = 4; //four rows
 const byte COLS = 4; //four columns
@@ -34,38 +40,55 @@ byte colPins[COLS] = {49, 48, 47, 46}; //connect to the column pinouts of the ke
 Keypad customKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); 
 
 void setup(){
+  lcd.init();                      // initialize the lcd 
+  lcd.backlight();
+  lcd.setCursor(1,0);
+  lcd.print("hello world");
+  lcd.setCursor(1,1);
+  lcd.print("initializing ..");
+  lcd.clear();
   Serial.begin(9600);
 }
 
+
+
 void reset(){
-  while (i !=0){Serial.println("confirmPasscode");
-    i =0;Serial.println("confirmPasscode");
+  while (i !=0){
+    i =0;
   }
   return;
 }
   
 void passwordChecker(){
+  lcd.setCursor(0,0);
+       lcd.print("Enter passcode :");
    char customKey = customKeypad.getKey();
   
   if (customKey){
+    
+    lcd.setCursor(i,1);
+       lcd.print("*");
     confirmPasscode[i]=customKey;
-    i++;
-   
+    
+   i++;
   }
   if(i == pass_length-1)
   {
       if(!strcmp(passcode,confirmPasscode))
       {
-  
-      Serial.println("correct");
-       Serial.println(confirmPasscode);
-       delay(5000);Serial.println(confirmPasscode);
+       lcd.clear();
+       lcd.print("correct");
+       
+       delay(5000);
+       
        reset();
 
        }
-       else{
-        Serial.println("incorrect");
-        delay(3000);  reset();
+       else{lcd.clear();
+        lcd.print("incorrect");
+        
+        delay(3000); 
+         reset();
        }
     }
 }
