@@ -14,7 +14,7 @@ int i=0;
 
 char passcode[pass_length] ="1234";
 
-char confirmPasscode[pass_length] ;
+char confirmPasscode[pass_length]="" ;
 
 
 
@@ -36,8 +36,15 @@ Keypad customKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS
 void setup(){
   Serial.begin(9600);
 }
+
+void reset(){
+  while (i !=0){Serial.println("confirmPasscode");
+    i =0;Serial.println("confirmPasscode");
+  }
+  return;
+}
   
-void loop(){
+void passwordChecker(){
    char customKey = customKeypad.getKey();
   
   if (customKey){
@@ -52,12 +59,19 @@ void loop(){
   
       Serial.println("correct");
        Serial.println(confirmPasscode);
+       delay(5000);Serial.println(confirmPasscode);
+       reset();
+
        }
        else{
         Serial.println("incorrect");
+        delay(3000);  reset();
        }
     }
 }
-  
+
+void loop(){
+passwordChecker();
+}
    
   
