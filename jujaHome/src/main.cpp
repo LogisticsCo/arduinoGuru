@@ -90,6 +90,22 @@ void passwordChecker(){
 
 void chairChecker(){
 int state= digitalRead(irchair);
+tvState = digitalRead(tv);
+lappystate=digitalRead(lappy);
+int officestate=digitalRead(officeup);
+int doorstate=digitalRead(doorUp);
+int bedstate= digitalRead(bedSide);
+
+
+if(state ==1 && tvState==0 && lappystate==0 && officestate ==0 && doorstate==0 && bedstate==0  )
+  {
+      digitalWrite(lappy,LOW);
+      digitalWrite(tv,LOW);
+      digitalWrite(officeUp,LOW);
+      digitalWrite(bedSide,LOW);
+  `   digitalWrite(doorUp,LOW);
+     
+  }
 } 
 
 void loop(){
