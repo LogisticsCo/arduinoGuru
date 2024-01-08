@@ -69,7 +69,8 @@ void passwordChecker(){
   if (customKey){
    
     confirmPasscode[i]=customKey;
-    i++; }
+    i++; 
+    }
 
   if(i == pass_length-1)
     {
@@ -103,9 +104,13 @@ if(state ==1 && tvState==0 && lappystate==0 && officestate ==0 && doorstate==0 &
       digitalWrite(tv,LOW);
       digitalWrite(officeUp,LOW);
       digitalWrite(bedSide,LOW);
-  `   digitalWrite(doorUp,LOW);
-     
+      digitalWrite(doorUp,LOW);
   }
+if (state==0 && tvState==0 && lappystate==0 && officestate ==0 && doorstate==0 && bedstate==0 )
+
+    {
+     passwordChecker();
+    }
 } 
 
 void loop(){
