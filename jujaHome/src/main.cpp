@@ -1,13 +1,7 @@
 //importation of all our libraries 
 #include <Arduino.h>
 #include <Keypad.h>
-#include <Wire.h> 
-#include <LiquidCrystal_I2C.h>
-
-// setting up our display
-LiquidCrystal_I2C lcd(0x27,16,2);  // set the LCD address to 0x27 for a 16 chars and 2 line display
-// the values above change from one lcd to another and it is therefore prudent to establish
-//those that relate to your lcd.
+ #include <Wire.h>
 
 //declaration of variables
 const byte ROWS = 4; //four rows
@@ -29,7 +23,7 @@ int doorUp = 27;   // bedUnder
 int irchair=28;
 int tvState=0;
 int lappystate=0;
-bool 
+
 //define the symbols on the buttons of the keypads
 char hexaKeys[ROWS][COLS] = {
   {'1','4','7','*'},
@@ -46,13 +40,6 @@ byte colPins[COLS] = {49, 48, 47, 46}; //connect to the column pinouts of the ke
 Keypad customKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); 
 
 void setup(){
-  lcd.init();                      // initialize the lcd 
-  lcd.backlight();
-  lcd.setCursor(1,0);
-  lcd.print("hello world");
-  lcd.setCursor(1,1);
-  lcd.print("initializing ..");
-  lcd.clear();
   pinMode(fan,OUTPUT);
   pinMode(accessLed,OUTPUT);
   pinMode(statusLed,OUTPUT);
@@ -61,6 +48,7 @@ void setup(){
   pinMode(lappy,OUTPUT);
   pinMode(doorUp,OUTPUT);
   pinMode(officeUp,OUTPUT);
+  pinMode(irchair,INPUT);
   digitalWrite(statusLed,HIGH);
   Serial.begin(9600);
 }
@@ -75,13 +63,11 @@ void reset(){
 }
   
 void passwordChecker(){
-  lcd.setCursor(0,0);
-  lcd.print("Enter passcode :");
+  
   char customKey = customKeypad.getKey();
   
   if (customKey){
-    lcd.setCursor(i,1);
-    lcd.print("*");
+   
     confirmPasscode[i]=customKey;
     i++; }
 
@@ -89,96 +75,24 @@ void passwordChecker(){
     {
         if(!strcmp(passcode,confirmPasscode))
           {
-            lcd.clear();
-            lcd.print("correct");
+            
             digitalWrite(accessLed,HIGH);
             delay(2000);
             digitalWrite(accessLed,LOW);
             i=0;
-            systemUP();
+            
            }
-        else{lcd.clear();
-        lcd.print("incorrect");
+        else{
         reset();
        }
     }
 }
-void systemUP(){
-        digitalWrite(lappy,HIGH);
-        digitalWrite(tv,HIGH);
-        digitalWrite(officeUp,LOW);
-}
-void ThinkThru(){
-  digitalWrite(officeUp,HIGH);
-}
-void ChairOccupied()
-  {
-    tvState= digitalRead(tv);
-    lappystate= digitalRead(lappy);
 
-    if(irchair==1 && tvstate=0 && lappystate=0)
-    {
-        passwordChecker();
-    }
+void chairChecker(){
+int state= digitalRead(irchair);
+} 
 
-    if(irchair==0 && tvstate=0 && lappystate=0)
-    {
-      digitalWrite(officeUp,LOW);
-    }
-
-    if(irchair==0 && tvstate=1 && lappystate=1)
-    {
-      delay(30000);
-      int state=digitalRead(irchair);
-        if(state=0)
-        {
-          digitalWrite(tv,LOW);
-          digitalWrite(lappy,LOW);
-          digitalWrite(officeUp,HIGH);
-          passwordChecker();
-        }
-        else{
-          digitalWrite(tv,HIGH);
-          digitalWrite(lappy,HIGH);
-          digitalWrite(officeUp,LOW);
-        }
-    }
-    if(irchair == 1 && tvState == 1 && lappystate == 1)
-
-
-}
-void shutdown(){
-  char customKey = customKeypad.getKey();
-
-  char off[leng] ="D"
-  char sleep[leng]="#"
-  char sureoff =""
-    if (customKey)
-        {
-          sureoff[f]=customKey;
-        }
-    
-    if(f == leng-1)
-       {
-          if(!strcmp(off,sureoff))
-           {
-            digitalWrite(tv,LOW);
-            digitalWrite(lappy,LOW);
-            digitalWrite(officeUp,LOW);
-            
-            }
-          if(!strcmp(sleep,sureoff))
-            {
-            digitalWrite(tv,LOW);
-            digitalWrite(lappy,LOW);
-            digitalWrite(officeUp,LOW);
-            digitalWrite(doorUp,LOW);
-            
-            }
-        }
-}
 void loop(){
+chairChecker();
 
 }
-   
-  
