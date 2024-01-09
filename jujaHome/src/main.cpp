@@ -91,41 +91,26 @@ void setup(){
 
 
 
-  
-//void passwordChecker(){
-  
-//}
-
-void chairChecker(){
-int state= digitalRead(irchair);
-tvState = digitalRead(tv);
-lappystate=digitalRead(lappy);
-int officestate=digitalRead(officeUp);
-int doorstate=digitalRead(doorUp);
-int bedstate= digitalRead(bedSide);
-
-
-if(state ==1 && tvState==0 && lappystate==0 && officestate ==0 && doorstate==0 && bedstate==0  )
-  {
-      digitalWrite(lappy,LOW);
-      digitalWrite(tv,LOW);
-      digitalWrite(officeUp,LOW);
-      digitalWrite(bedSide,LOW);
-      digitalWrite(doorUp,LOW);
-  }
-if (state==0 && tvState==0 && lappystate==0 && officestate ==0 && doorstate==0 && bedstate==0 )
-
-    {
-     
-    }
-if(state==0 && (tvState==1 || lappystate==1 || officestate ==1 || doorstate==1 || bedstate==1))
-{
-
-
-}
-} 
-
 void loop(){
 
-Serial.println("here now");
+while (i!=0)
+{
+  Serial.println("looping here");
+   char customKey = customKeypad.getKey();
+    if (customKey)
+        {
+          switch (customKey)
+          {
+          case '1':
+            Serial.println(customKey); delay(2000);
+            break;
+          
+          default:
+            break;
+          }
+        
+        i++; 
+        }
+}
+
 }
