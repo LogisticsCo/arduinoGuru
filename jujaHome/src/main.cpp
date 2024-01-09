@@ -131,44 +131,44 @@ while (i!=0)
 
             case '4':
             Serial.println(customKey);
-            digitalWrite(); 
-
+            digitalWrite(bedSide,LOW); 
+            digitalWrite();
             delay(2000);
             break;
 
             case '5':
             Serial.println(customKey);
-            digitalWrite(); 
+            digitalWrite(doorUp,HIGH); 
             delay(2000);
             break;
 
             case '6':
             Serial.println(customKey);
-            digitalWrite(); 
+            digitalWrite(doorUp,LOW);  
             delay(2000);
             break;
 
             case '7':
             Serial.println(customKey);
-            digitalWrite(); 
+            //we can write a function to establish connection with outer programs
             delay(2000);
             break;
 
             case '8':
             Serial.println(customKey);
-            digitalWrite(); 
+            
             delay(2000);
             break;
 
             case '9':
             Serial.println(customKey);
-            digitalWrite(); 
+            
             delay(2000);
             break;
 
             case '0':
             Serial.println(customKey);
-            digitalWrite(); 
+            
             delay(2000);
             break;
 
