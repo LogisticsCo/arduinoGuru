@@ -22,6 +22,10 @@ int doorUp = 27;   // bedUnder
 int irchair=28;
 int tvState=0;
 int lappystate=0;
+int bedstate =0;
+int fanstate=0;
+int officestate=0;
+int doorstate=0;
 
 //define the symbols on the buttons of the keypads
 char hexaKeys[ROWS][COLS] = {
@@ -211,8 +215,26 @@ while (i!=0)
 
             break;
           
-          }
-        
+          }delay(2000);
+        int tvState=digitalRead(tv);
+        int lappystate= digitalRead(lappy);
+        int bedstate = digitalRead(bedSide);
+        int fanstate= digitalRead(fan);
+        int officestate= digitalRead(officeUp);
+        int doorstate= digitalRead(doorUp);
+        Serial.println("tvState :" );
+        Serial.print(tvState );
+        Serial.println("lappystate :" );
+        Serial.print( lappystate );
+        Serial.println( "bedstate :" );
+        Serial.print( bedstate );
+        Serial.println("fanstate :" );
+        Serial.print(fanstate);
+        Serial.println( "officestate :");
+        Serial.print( officestate);
+        Serial.println( "doorstate :");
+        Serial.print( doorstate);
+        delay(2000);
         i++; 
         }
 }
