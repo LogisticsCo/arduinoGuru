@@ -111,77 +111,97 @@ while (i!=0)
           switch (customKey)
           {
           case '1':
-            Serial.println(customKey); 
+            Serial.println(customKey);
+            digitalWrite(officeUp,HIGH); 
             delay(2000);
             break;
-            
+
             case '2':
             Serial.println(customKey);
+            digitalWrite(officeUp,LOW);
+            
             delay(2000);
             break;
 
             case '3':
             Serial.println(customKey);
+            digitalWrite(bedSide,HIGH); 
             delay(2000);
             break;
 
             case '4':
             Serial.println(customKey);
+            digitalWrite(); 
+
             delay(2000);
             break;
 
             case '5':
             Serial.println(customKey);
+            digitalWrite(); 
             delay(2000);
             break;
 
             case '6':
             Serial.println(customKey);
+            digitalWrite(); 
             delay(2000);
             break;
 
             case '7':
             Serial.println(customKey);
+            digitalWrite(); 
             delay(2000);
             break;
 
             case '8':
             Serial.println(customKey);
+            digitalWrite(); 
             delay(2000);
             break;
 
             case '9':
             Serial.println(customKey);
+            digitalWrite(); 
             delay(2000);
             break;
 
             case '0':
             Serial.println(customKey);
+            digitalWrite(); 
             delay(2000);
             break;
 
             case '*':
             Serial.println(customKey);
+            digitalWrite(officeUp,LOW); 
+            digitalWrite(lappy,LOW);
+            digitalWrite(tv,LOW);
+            digitalWrite(doorUp,LOW);
             delay(2000);
             break;
 
             case 'A':
             Serial.println(customKey);
+            digitalWrite(); 
             delay(2000);
             break;
 
             case 'B':
             Serial.println(customKey);
+            digitalWrite(); 
             delay(2000);
             break;
 
             case 'C':
             Serial.println(customKey);
+            digitalWrite(); 
             delay(2000);
             break;
 
             case 'D':
             Serial.println(customKey);
+            digitalWrite(); 
             delay(2000);
             break;
 
