@@ -111,15 +111,86 @@ while (i!=0)
           switch (customKey)
           {
           case '1':
-            Serial.println(customKey); delay(2000);
+            Serial.println(customKey); 
+            delay(2000);
             break;
-          case '#':
-          Serial.println("resetting");
+            
+            case '2':
+            Serial.println(customKey);
+            delay(2000);
+            break;
+
+            case '3':
+            Serial.println(customKey);
+            delay(2000);
+            break;
+
+            case '4':
+            Serial.println(customKey);
+            delay(2000);
+            break;
+
+            case '5':
+            Serial.println(customKey);
+            delay(2000);
+            break;
+
+            case '6':
+            Serial.println(customKey);
+            delay(2000);
+            break;
+
+            case '7':
+            Serial.println(customKey);
+            delay(2000);
+            break;
+
+            case '8':
+            Serial.println(customKey);
+            delay(2000);
+            break;
+
+            case '9':
+            Serial.println(customKey);
+            delay(2000);
+            break;
+
+            case '0':
+            Serial.println(customKey);
+            delay(2000);
+            break;
+
+            case '*':
+            Serial.println(customKey);
+            delay(2000);
+            break;
+
+            case 'A':
+            Serial.println(customKey);
+            delay(2000);
+            break;
+
+            case 'B':
+            Serial.println(customKey);
+            delay(2000);
+            break;
+
+            case 'C':
+            Serial.println(customKey);
+            delay(2000);
+            break;
+
+            case 'D':
+            Serial.println(customKey);
+            delay(2000);
+            break;
+
+            case '#':
+            Serial.println("resetting");
             reset();Serial.println("resetting");
 
             break;
-          default:
-            break;
+          
           }
         
         i++; 
