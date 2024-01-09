@@ -70,9 +70,9 @@ void setup(){
           if(!strcmp(passcode,confirmPasscode))
             {
               Serial.println("correct");
-              digitalWrite(accessLed,HIGH);
-              delay(2000);
-              digitalWrite(accessLed,LOW);
+              digitalWrite(officeUp,HIGH); // better to use the relay for status than the led
+              delay(2000);Serial.println("correct");
+              digitalWrite(officeUp,LOW);
               i=0;
             
            }
