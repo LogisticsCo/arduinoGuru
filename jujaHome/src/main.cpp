@@ -50,50 +50,55 @@ void setup(){
   pinMode(officeUp,OUTPUT);
   pinMode(irchair,INPUT);
   digitalWrite(statusLed,HIGH);
+  digitalWrite(fan,HIGH);
   Serial.begin(9600);
-}
-
-
-
-void reset(){
-  while (i !=0){
-    i =0;
-  }
-  return;
-}
-  
-void passwordChecker(){
-  
-  char customKey = customKeypad.getKey();
-  
-  if (customKey){
+  Serial.println("testphase")
+  while (i!=pass_length-1)
+  {
    
-    confirmPasscode[i]=customKey;
-    i++; 
-    }
+      char customKey = customKeypad.getKey();
+  
+      if (customKey)
+      {
+   
+        confirmPasscode[i]=customKey;
+        i++; 
+      }
 
-  if(i == pass_length-1)
-    {
-        if(!strcmp(passcode,confirmPasscode))
-          {
-            
-            digitalWrite(accessLed,HIGH);
-            delay(2000);
-            digitalWrite(accessLed,LOW);
-            i=0;
+      if(i == pass_length-1)
+      {
+          if(!strcmp(passcode,confirmPasscode))
+            {
+              Serial.println("correct");
+              digitalWrite(accessLed,HIGH);
+              delay(2000);
+              digitalWrite(accessLed,LOW);
+              i=0;
             
            }
+
         else{
-        reset();
+          Serial.println("incorrect");
+        i =0;
        }
     }
+  }
+  
 }
+
+
+
+
+  
+//void passwordChecker(){
+  
+//}
 
 void chairChecker(){
 int state= digitalRead(irchair);
 tvState = digitalRead(tv);
 lappystate=digitalRead(lappy);
-int officestate=digitalRead(officeup);
+int officestate=digitalRead(officeUp);
 int doorstate=digitalRead(doorUp);
 int bedstate= digitalRead(bedSide);
 
@@ -109,11 +114,16 @@ if(state ==1 && tvState==0 && lappystate==0 && officestate ==0 && doorstate==0 &
 if (state==0 && tvState==0 && lappystate==0 && officestate ==0 && doorstate==0 && bedstate==0 )
 
     {
-     passwordChecker();
+     
     }
+if(state==0 && (tvState==1 || lappystate==1 || officestate ==1 || doorstate==1 || bedstate==1))
+{
+
+
+}
 } 
 
 void loop(){
-chairChecker();
+
 
 }
