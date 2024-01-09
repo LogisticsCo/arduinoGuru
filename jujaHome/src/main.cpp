@@ -56,6 +56,7 @@ void setup(){
   pinMode(resetpin,OUTPUT);
   Serial.begin(9600);
   Serial.println("testphase");
+
   while (i!=pass_length-1)
   {
    
@@ -117,51 +118,51 @@ while (i!=0)
           case '1':
             Serial.println(customKey);
             digitalWrite(officeUp,HIGH); 
-            delay(2000);
+            //delay(2000);
             break;
 
             case '2':
             Serial.println(customKey);
             digitalWrite(officeUp,LOW);
             
-            delay(2000);
+            //delay(2000);
             break;
 
             case '3':
             Serial.println(customKey);
             digitalWrite(bedSide,HIGH); 
-            delay(2000);
+            //delay(2000);
             break;
 
             case '4':
             Serial.println(customKey);
             digitalWrite(bedSide,LOW); 
             
-            delay(2000);
+            //delay(2000);
             break;
 
             case '5':
             Serial.println(customKey);
             digitalWrite(doorUp,HIGH); 
-            delay(2000);
+            //delay(2000);
             break;
 
             case '6':
             Serial.println(customKey);
             digitalWrite(doorUp,LOW);  
-            delay(2000);
+            //delay(2000);
             break;
 
             case '7':
             Serial.println(customKey);
             //we can write a function to establish connection with outer programs
-            delay(2000);
+            //delay(2000);
             break;
 
             case '8':
             Serial.println(customKey);
             
-            delay(2000);
+            //delay(2000);
             break;
 
             case '9':
@@ -171,45 +172,45 @@ while (i!=0)
             break;
 
             case '0':
-            Serial.println(customKey);
+            //Serial.println(customKey);
             i=-1;
-            delay(2000);
+            //delay(2000);
             break;
 
             case '*':
-            Serial.println(customKey);
+            //Serial.println(customKey);
             digitalWrite(officeUp,LOW); 
             digitalWrite(lappy,LOW);
             digitalWrite(tv,LOW);
             digitalWrite(doorUp,LOW);
-            delay(2000);
+            //delay(2000);
             break;
 
             case 'A':
-            Serial.println(customKey);
+            //Serial.println(customKey);
             digitalWrite(officeUp,HIGH); 
             digitalWrite(lappy,HIGH);
             digitalWrite(tv,HIGH);
             digitalWrite(doorUp,HIGH);
-            delay(2000);
+            //delay(2000);
             break;
 
             case 'B':
             Serial.println(customKey);
             
-            delay(2000);
+            //delay(2000);
             break;
 
             case 'C':
             Serial.println(customKey);
            
-            delay(2000);
+            //delay(2000);
             break;
 
             case 'D':
             Serial.println(customKey);
            
-            delay(2000);
+           // delay(2000);
             break;
 
             case '#':
@@ -219,6 +220,7 @@ while (i!=0)
             break;
           
           }
+          /*
         int tvState=digitalRead(tv);
         int lappystate= digitalRead(lappy);
         int bedstate = digitalRead(bedSide);
@@ -237,12 +239,9 @@ while (i!=0)
         Serial.println( officestate);
         Serial.print( "doorstate :");
         Serial.println( doorstate);
-        delay(5000);
+       delay(5000); */
         i++; 
         }
-}while (i==0)
-{
-Serial.println("out of the while loop");
-delay(2000);
+}
 
-}}
+}
