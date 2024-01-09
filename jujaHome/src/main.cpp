@@ -52,7 +52,7 @@ void setup(){
   digitalWrite(statusLed,HIGH);
   digitalWrite(fan,HIGH);
   Serial.begin(9600);
-  Serial.println("testphase")
+  Serial.println("testphase");
   while (i!=pass_length-1)
   {
    
