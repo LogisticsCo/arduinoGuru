@@ -12,6 +12,7 @@ int f=0;  // for shutdown function
 #define leng 2  //length to establish off state
 char passcode[pass_length] ="1234";
 char confirmPasscode[pass_length]="" ;
+int resetpin =12;
 int fan =22;
 int bedSide = 23;
 int tv = 24;
@@ -38,6 +39,8 @@ byte colPins[COLS] = {49, 48, 47, 46}; //connect to the column pinouts of the ke
 Keypad customKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); 
 
 void setup(){
+  
+  digitalWrite(resetpin,HIGH);
   pinMode(fan,OUTPUT);
   pinMode(bedSide,OUTPUT);
   pinMode(tv,OUTPUT);
@@ -45,8 +48,8 @@ void setup(){
   pinMode(doorUp,OUTPUT);
   pinMode(officeUp,OUTPUT);
   pinMode(irchair,INPUT);
-  
   digitalWrite(fan,HIGH);
+  pinMode(resetpin,OUTPUT);
   Serial.begin(9600);
   Serial.println("testphase");
   while (i!=pass_length-1)
@@ -65,15 +68,16 @@ void setup(){
       {
           if(!strcmp(passcode,confirmPasscode))
             {
-              
+              Serial.println("correct");
               digitalWrite(officeUp,HIGH); // better to use the relay for status than the led
               delay(2000);
               digitalWrite(officeUp,LOW);
               
+              
             
            }
 
-        else{
+        else{Serial.println("incorrect");
               digitalWrite(officeUp,HIGH); // better to use the relay for status than the led
               delay(1000);
               digitalWrite(officeUp,LOW);
@@ -81,6 +85,7 @@ void setup(){
               digitalWrite(officeUp,HIGH);
               delay(1000);
               digitalWrite(officeUp,LOW);
+              
               i =0;
             }
         }
@@ -89,7 +94,11 @@ void setup(){
 }
 
 
-
+void reset(){
+    Serial.println("reset");
+    delay(2000);
+    digitalWrite(resetpin,LOW);
+}
 
 void loop(){
 
@@ -104,7 +113,11 @@ while (i!=0)
           case '1':
             Serial.println(customKey); delay(2000);
             break;
-          
+          case '#':
+          Serial.println("resetting");
+            reset();Serial.println("resetting");
+
+            break;
           default:
             break;
           }
