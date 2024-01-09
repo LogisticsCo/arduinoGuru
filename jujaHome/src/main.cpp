@@ -155,19 +155,18 @@ while (i!=0)
 
             case '7':
             Serial.println(customKey);
-            //we can write a function to establish connection with outer programs
-            //delay(2000);
+            digitalWrite(lappy,HIGH);
             break;
 
             case '8':
             Serial.println(customKey);
-            
+            digitalWrite(lappy,LOW);
             //delay(2000);
             break;
 
             case '9':
             Serial.println(customKey);
-            
+            digitalWrite(tv,HIGH);
             delay(2000);
             break;
 
@@ -197,7 +196,7 @@ while (i!=0)
 
             case 'B':
             Serial.println(customKey);
-            
+            digitalWrite(tv,LOW);
             //delay(2000);
             break;
 
