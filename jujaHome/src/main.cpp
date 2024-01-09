@@ -171,8 +171,8 @@ while (i!=0)
             break;
 
             case '0':
-            //Serial.println(customKey);
-            i=-1;
+            Serial.println(customKey);
+            //i=-1;
             //delay(2000);
             break;
 
