@@ -12,8 +12,6 @@ int f=0;  // for shutdown function
 #define leng 2  //length to establish off state
 char passcode[pass_length] ="1234";
 char confirmPasscode[pass_length]="" ;
-int statusLed = 13;
-int accessLed = 11;
 int fan =22;
 int bedSide = 23;
 int tv = 24;
@@ -41,22 +39,20 @@ Keypad customKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS
 
 void setup(){
   pinMode(fan,OUTPUT);
-  pinMode(accessLed,OUTPUT);
-  pinMode(statusLed,OUTPUT);
   pinMode(bedSide,OUTPUT);
   pinMode(tv,OUTPUT);
   pinMode(lappy,OUTPUT);
   pinMode(doorUp,OUTPUT);
   pinMode(officeUp,OUTPUT);
   pinMode(irchair,INPUT);
-  digitalWrite(statusLed,HIGH);
+  
   digitalWrite(fan,HIGH);
   Serial.begin(9600);
   Serial.println("testphase");
   while (i!=pass_length-1)
   {
    
-      char customKey = customKeypad.getKey();
+    char customKey = customKeypad.getKey();
   
       if (customKey)
       {
@@ -69,19 +65,25 @@ void setup(){
       {
           if(!strcmp(passcode,confirmPasscode))
             {
-              Serial.println("correct");
+              
               digitalWrite(officeUp,HIGH); // better to use the relay for status than the led
-              delay(2000);Serial.println("correct");
+              delay(2000);
               digitalWrite(officeUp,LOW);
-              i=0;
+              
             
            }
 
         else{
-          Serial.println("incorrect");
-        i =0;
-       }
-    }
+              digitalWrite(officeUp,HIGH); // better to use the relay for status than the led
+              delay(1000);
+              digitalWrite(officeUp,LOW);
+              delay(1000);
+              digitalWrite(officeUp,HIGH);
+              delay(1000);
+              digitalWrite(officeUp,LOW);
+              i =0;
+            }
+        }
   }
   
 }
@@ -125,5 +127,5 @@ if(state==0 && (tvState==1 || lappystate==1 || officestate ==1 || doorstate==1 |
 
 void loop(){
 
-
+Serial.println("here now");
 }
