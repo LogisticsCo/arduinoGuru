@@ -172,7 +172,7 @@ while (i!=0)
 
             case '0':
             Serial.println(customKey);
-            i=0;
+            i=-1;
             delay(2000);
             break;
 
@@ -187,7 +187,10 @@ while (i!=0)
 
             case 'A':
             Serial.println(customKey);
-            
+            digitalWrite(officeUp,HIGH); 
+            digitalWrite(lappy,HIGH);
+            digitalWrite(tv,HIGH);
+            digitalWrite(doorUp,HIGH);
             delay(2000);
             break;
 
@@ -215,30 +218,31 @@ while (i!=0)
 
             break;
           
-          }delay(2000);
+          }
         int tvState=digitalRead(tv);
         int lappystate= digitalRead(lappy);
         int bedstate = digitalRead(bedSide);
         int fanstate= digitalRead(fan);
         int officestate= digitalRead(officeUp);
         int doorstate= digitalRead(doorUp);
-        Serial.println("tvState :" );
-        Serial.print(tvState );
-        Serial.println("lappystate :" );
-        Serial.print( lappystate );
-        Serial.println( "bedstate :" );
-        Serial.print( bedstate );
-        Serial.println("fanstate :" );
-        Serial.print(fanstate);
-        Serial.println( "officestate :");
-        Serial.print( officestate);
-        Serial.println( "doorstate :");
-        Serial.print( doorstate);
-        delay(2000);
+        Serial.print("tvState :" );
+        Serial.println(tvState );
+        Serial.print("lappystate :" );
+        Serial.println( lappystate );
+        Serial.print( "bedstate :" );
+        Serial.println( bedstate );
+        Serial.print("fanstate :" );
+        Serial.println(fanstate);
+        Serial.print( "officestate :");
+        Serial.println( officestate);
+        Serial.print( "doorstate :");
+        Serial.println( doorstate);
+        delay(5000);
         i++; 
         }
-}
+}while (i==0)
+{
 Serial.println("out of the while loop");
 delay(2000);
 
-}
+}}
