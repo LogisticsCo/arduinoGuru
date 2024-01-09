@@ -132,7 +132,7 @@ while (i!=0)
             case '4':
             Serial.println(customKey);
             digitalWrite(bedSide,LOW); 
-            digitalWrite();
+            
             delay(2000);
             break;
 
@@ -168,7 +168,7 @@ while (i!=0)
 
             case '0':
             Serial.println(customKey);
-            
+            i=0;
             delay(2000);
             break;
 
@@ -183,25 +183,25 @@ while (i!=0)
 
             case 'A':
             Serial.println(customKey);
-            digitalWrite(); 
+            
             delay(2000);
             break;
 
             case 'B':
             Serial.println(customKey);
-            digitalWrite(); 
+            
             delay(2000);
             break;
 
             case 'C':
             Serial.println(customKey);
-            digitalWrite(); 
+           
             delay(2000);
             break;
 
             case 'D':
             Serial.println(customKey);
-            digitalWrite(); 
+           
             delay(2000);
             break;
 
@@ -216,5 +216,7 @@ while (i!=0)
         i++; 
         }
 }
+Serial.println("out of the while loop");
+delay(2000);
 
 }
