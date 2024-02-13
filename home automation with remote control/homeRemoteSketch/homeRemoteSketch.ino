@@ -13,6 +13,11 @@ pinMode(kitchen,OUTPUT);
 pinMode(lappy,OUTPUT);
 pinMode(tv,OUTPUT);
 Serial.begin(9600);
+count=0;
+while (count<4){
+  Serial.println("starting up");
+}
+
 
 }
 
@@ -21,46 +26,52 @@ void loop() {
     Serial.println(IR.decodedIRData.decodedRawData, HEX);
     if(IR.decodedIRData.decodedRawData==OxEA157FOO){
       //OFF  
-      digitalWrite()
+      digitalWrite(office,LOW);
+      digitalWrite(tv,LOW);
+      digitalWrite(lappy,LOW);
+      digitalWrite(kitchen,LOW);
 
 
     }
     if(IR.decodedIRData.decodedRawData==OxFE017FOO){
     //1
-    digitalWrite()
+    digitalWrite(office,HIGH);
 
     }
     if(IR.decodedIRData.decodedRawData==OxFD027FOO){
     //2
-    digitalWrite()
+    digitalWrite(office,LOW);
     }
     if(IR.decodedIRData.decodedRawData==OxFC037FOO){
     //3
-    digitalWrite()
+    digitalWrite(tv,HIGH);
     }
     if(IR.decodedIRData.decodedRawData==OxFB047FOO){
     //4
-    digitalWrite()
+    digitalWrite(tv,LOW);
     }
     if(IR.decodedIRData.decodedRawData==OxFA057FOO){
     //5
-    digitalWrite()
+    digitalWrite(lappy,HIGH);
     }
     if(IR.decodedIRData.decodedRawData==OxF9067FOO){
     //6
-    digitalWrite()
+    digitalWrite(lappy,LOW);
     }
     if(IR.decodedIRData.decodedRawData==OxF8077FOO){
     //7
-    digitalWrite()
+    digitalWrite(kitchen,HIGH);
     }
     if(IR.decodedIRData.decodedRawData==OxEF107FOO){
-    //OFF
-    digitalWrite()
+    //ON
+    digitalWrite(office,HIGH);
+    digitalWrite(tv,HIGH);
+    digitalWrite(lappy,HIGH);
+    digitalWrite(kitchen,HIGH);
     }
     if(IR.decodedIRData.decodedRawData==OxF7087FOO){
     //8
-    digitalWrite()
+    digitalWrite(kitchen,LOW);
     }
     if(IR.decodedIRData.decodedRawData==OxF6097FOO){
     //9
