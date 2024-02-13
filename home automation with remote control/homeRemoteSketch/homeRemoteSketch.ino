@@ -24,6 +24,8 @@ while (inputpasscode!=passcode){
       IR.resume();
     }
     else{
+      Serial.println("hehre");
+      Serial.println(count);
         if(count<4){
 
             if(IR.decodedIRData.decodedRawData==0xFE017F00){
@@ -78,7 +80,7 @@ while (inputpasscode!=passcode){
 
         }
         else{
-          Serial.println(count);
+          
           count=0;
           inputpasscode="";
         }
