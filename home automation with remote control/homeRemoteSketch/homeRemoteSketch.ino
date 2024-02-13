@@ -13,6 +13,7 @@ pinMode(office,OUTPUT);
 pinMode(kitchen,OUTPUT);
 pinMode(lappy,OUTPUT);
 pinMode(tv,OUTPUT);
+
 Serial.begin(9600);
 
 //put a passcode-4 digit
@@ -79,10 +80,8 @@ while (inputpasscode!=passcode){
 
 
         }
-        else{
-          
-          count=0;
-          inputpasscode="";
+        if(count==3 && passcode!=inputpasscode){
+        Serial.println("incorrect");
         }
     
     count+=1;
