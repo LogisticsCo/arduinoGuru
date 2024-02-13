@@ -1,5 +1,10 @@
 #include <IRremote.h>
 IRrecv IR(13);
+int office=22;
+int kitchen=24;
+int lappy=26;
+int tv= 28;
+
 
 void setup() {
 IR.enableIRIn();
@@ -12,7 +17,9 @@ void loop() {
   if(IR.decode()){
     Serial.println(IR.decodedIRData.decodedRawData, HEX);
     if(IR.decodedIRData.decodedRawData==OxEA157FOO){
-//ON
+      //ON  
+
+
     }
     if(IR.decodedIRData.decodedRawData==OxFE017FOO){
 //1
