@@ -5,8 +5,8 @@ int kitchen=24;
 int lappy=26;
 int tv= 28;
 int count=0;
-char passcode ='1234';
-char inputpasscode=' ';
+char passcode ="1234";
+char inputpasscode=" ";
 void setup() {
 IR.enableIRIn();
 pinMode(office,OUTPUT);
@@ -20,14 +20,65 @@ while (count<4){
   
   if(IR.decode()){
     if(IR.decodedIRData.decodedRawData==0x0){
-      Serial.println("noise");
+      
       IR.resume();
     }
     else{
     Serial.println(count);
     count+=1;
+    //Serial.println(IR.decodedIRData.decodedRawData, HEX);
+
+    if(IR.decodedIRData.decodedRawData==0xFE017F00){
+    //1
+    Serial.println(inputpasscode);
+    inputpasscode+=1;
     Serial.println(IR.decodedIRData.decodedRawData, HEX);
+    Serial.println(inputpasscode);
+
+    }
+    if(IR.decodedIRData.decodedRawData==0xFD027F00){
+    //2
+    inputpasscode+="2";
+    Serial.println(inputpasscode);
+    }
+    if(IR.decodedIRData.decodedRawData==0xFC037F00){
+    //3
+    inputpasscode+="3";
+    Serial.println(inputpasscode);
+    }
+    if(IR.decodedIRData.decodedRawData==0xFB047F00){
+    //4
+    inputpasscode+="4";
+    Serial.println(inputpasscode);
+    }
+    if(IR.decodedIRData.decodedRawData==0xFA057F00){
+    //5
+    inputpasscode+="5";
+    Serial.println(inputpasscode);
+    }
+    if(IR.decodedIRData.decodedRawData==0xF9067F00){
+    //6
+    inputpasscode+="6";
+    Serial.println(inputpasscode);
+    }
+    if(IR.decodedIRData.decodedRawData==0xF8077F00){
+    //7
+    inputpasscode+="7";
+    Serial.println(inputpasscode);
+    }
+    
+    if(IR.decodedIRData.decodedRawData==0xF7087F00){
+    //8
+    inputpasscode+="8";
+    Serial.println(inputpasscode);
+    }
+    if(IR.decodedIRData.decodedRawData==0xF6097F00){
+    //9
+    inputpasscode+="9";
+    Serial.println(inputpasscode);
+    }
     IR.resume(); 
+    
     }
     
   }
