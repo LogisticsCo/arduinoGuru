@@ -5,8 +5,8 @@ int kitchen=24;
 int lappy=26;
 int tv= 28;
 int count=0;
-char passcode ="1234";
-char inputpasscode=" ";
+String passcode ="1234";
+String inputpasscode="";
 void setup() {
 IR.enableIRIn();
 pinMode(office,OUTPUT);
@@ -30,9 +30,9 @@ while (count<4){
 
     if(IR.decodedIRData.decodedRawData==0xFE017F00){
     //1
-    Serial.println(inputpasscode);
+    
     inputpasscode+=1;
-    Serial.println(IR.decodedIRData.decodedRawData, HEX);
+    
     Serial.println(inputpasscode);
 
     }
