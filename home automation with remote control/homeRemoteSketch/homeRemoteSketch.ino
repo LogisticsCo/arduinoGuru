@@ -74,6 +74,7 @@ while (inputpasscode!=passcode){
             inputpasscode+="9";
             Serial.println(inputpasscode);
         }
+      
 
     }
     
@@ -85,6 +86,9 @@ while (inputpasscode!=passcode){
   }
   
 }
+digitalWrite(office,HIGH);
+delay(2000);
+digitalWrite(office,LOW);
 
 
 }
