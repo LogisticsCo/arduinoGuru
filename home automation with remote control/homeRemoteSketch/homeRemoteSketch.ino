@@ -11,6 +11,30 @@ Serial.begin(9600);
 void loop() {
   if(IR.decode()){
     Serial.println(IR.decodedIRData.decodedRawData, HEX);
+    if(IR.decodedIRData.decodedRawData==Ox){
+
+    }
+    if(IR.decodedIRData.decodedRawData==Ox){
+
+    }
+    if(IR.decodedIRData.decodedRawData==Ox){
+
+    }
+    if(IR.decodedIRData.decodedRawData==Ox){
+
+    }
+    if(IR.decodedIRData.decodedRawData==Ox){
+
+    }
+    if(IR.decodedIRData.decodedRawData==Ox){
+
+    }
+    if(IR.decodedIRData.decodedRawData==Ox){
+
+    }
+    if(IR.decodedIRData.decodedRawData==Ox){
+
+    }
   delay(2000);
   IR.resume();
   }
