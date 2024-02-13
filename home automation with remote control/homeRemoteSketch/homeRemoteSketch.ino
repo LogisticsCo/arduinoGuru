@@ -44,7 +44,7 @@ void loop() {
     if(IR.decodedIRData.decodedRawData==OxF6097FOO){
 //9
     }
-  delay(2000);
+  delay(1000);
   IR.resume();
   }
   
