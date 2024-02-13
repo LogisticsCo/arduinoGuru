@@ -16,7 +16,7 @@ pinMode(tv,OUTPUT);
 Serial.begin(9600);
 
 //put a passcode-4 digit
-while (count<4){
+while (inputpasscode!=passcode){
   
   if(IR.decode()){
     if(IR.decodedIRData.decodedRawData==0x0){
@@ -24,59 +24,60 @@ while (count<4){
       IR.resume();
     }
     else{
-    Serial.println(count);
+    if(count<4){
+      
+        if(IR.decodedIRData.decodedRawData==0xFE017F00){
+        //1
+
+            inputpasscode+=1;
+            Serial.println(inputpasscode);
+
+        }
+        if(IR.decodedIRData.decodedRawData==0xFD027F00){
+        //2
+            inputpasscode+="2";
+            Serial.println(inputpasscode);
+        }
+        if(IR.decodedIRData.decodedRawData==0xFC037F00){
+        //3
+            inputpasscode+="3";
+            Serial.println(inputpasscode);
+        }
+        if(IR.decodedIRData.decodedRawData==0xFB047F00){
+        //4
+            inputpasscode+="4";
+            Serial.println(inputpasscode);
+        }
+        if(IR.decodedIRData.decodedRawData==0xFA057F00){
+        //5
+            inputpasscode+="5";
+            Serial.println(inputpasscode);
+        }
+        if(IR.decodedIRData.decodedRawData==0xF9067F00){
+        //6
+            inputpasscode+="6";
+            Serial.println(inputpasscode);
+        }
+        if(IR.decodedIRData.decodedRawData==0xF8077F00){
+        //7
+            inputpasscode+="7";
+            Serial.println(inputpasscode);
+        }
+
+        if(IR.decodedIRData.decodedRawData==0xF7087F00){
+        //8
+            inputpasscode+="8";
+            Serial.println(inputpasscode);
+        }
+        if(IR.decodedIRData.decodedRawData==0xF6097F00){
+        //9
+            inputpasscode+="9";
+            Serial.println(inputpasscode);
+        }
+
+    }
+    
     count+=1;
-    //Serial.println(IR.decodedIRData.decodedRawData, HEX);
-
-    if(IR.decodedIRData.decodedRawData==0xFE017F00){
-    //1
-    
-    inputpasscode+=1;
-    
-    Serial.println(inputpasscode);
-
-    }
-    if(IR.decodedIRData.decodedRawData==0xFD027F00){
-    //2
-    inputpasscode+="2";
-    Serial.println(inputpasscode);
-    }
-    if(IR.decodedIRData.decodedRawData==0xFC037F00){
-    //3
-    inputpasscode+="3";
-    Serial.println(inputpasscode);
-    }
-    if(IR.decodedIRData.decodedRawData==0xFB047F00){
-    //4
-    inputpasscode+="4";
-    Serial.println(inputpasscode);
-    }
-    if(IR.decodedIRData.decodedRawData==0xFA057F00){
-    //5
-    inputpasscode+="5";
-    Serial.println(inputpasscode);
-    }
-    if(IR.decodedIRData.decodedRawData==0xF9067F00){
-    //6
-    inputpasscode+="6";
-    Serial.println(inputpasscode);
-    }
-    if(IR.decodedIRData.decodedRawData==0xF8077F00){
-    //7
-    inputpasscode+="7";
-    Serial.println(inputpasscode);
-    }
-    
-    if(IR.decodedIRData.decodedRawData==0xF7087F00){
-    //8
-    inputpasscode+="8";
-    Serial.println(inputpasscode);
-    }
-    if(IR.decodedIRData.decodedRawData==0xF6097F00){
-    //9
-    inputpasscode+="9";
-    Serial.println(inputpasscode);
-    }
     IR.resume(); 
     
     }
