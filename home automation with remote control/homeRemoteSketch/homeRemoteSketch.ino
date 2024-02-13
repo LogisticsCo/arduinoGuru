@@ -19,10 +19,17 @@ Serial.begin(9600);
 while (count<4){
   
   if(IR.decode()){
-    Serial.print(count);
+    if(IR.decodedIRData.decodedRawData==0x0){
+      Serial.println("noise");
+      IR.resume();
+    }
+    else{
+    Serial.println(count);
     count+=1;
     Serial.println(IR.decodedIRData.decodedRawData, HEX);
-    IR.resume();
+    IR.resume(); 
+    }
+    
   }
   
 }
