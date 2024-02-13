@@ -17,10 +17,12 @@ Serial.begin(9600);
 
 //put a passcode-4 digit
 while (count<4){
-  Serial.print(count);
+  
   if(IR.decode()){
+    Serial.print(count);
     count+=1;
     Serial.println(IR.decodedIRData.decodedRawData, HEX);
+    IR.resume();
   }
   
 }
