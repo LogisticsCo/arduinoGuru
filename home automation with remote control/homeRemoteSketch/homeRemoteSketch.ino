@@ -8,7 +8,12 @@ int tv= 28;
 
 void setup() {
 IR.enableIRIn();
-//pinMode();
+pinMode(office,OUTPUT);
+pinMode(kitchen,OUTPUT);
+pinMode(lappy,OUTPUT);
+pinMode(tv,OUTPUT);
+
+
 Serial.begin(9600);
 
 }
