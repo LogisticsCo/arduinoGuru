@@ -1,6 +1,6 @@
 #include <IRremote.h>
 IRrecv IR(12);
-int led=13;
+int led=13
 int office=22;
 int kitchen=24;
 int lappy=26;
@@ -105,9 +105,7 @@ while (inputpasscode!=passcode){
             }
             if(IR.decodedIRData.decodedRawData==0xF6097F00){
             //9
-                digitalWrite(led,HIGH);
-                delay(500);
-                digitalWrite(led,LOW);
+                
                 inputpasscode+="9";
                 Serial.println(inputpasscode);
                 count+=1;
