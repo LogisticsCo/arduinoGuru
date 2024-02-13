@@ -34,57 +34,69 @@ while (inputpasscode!=passcode){
 
                 inputpasscode+=1;
                 Serial.println(inputpasscode);
+                count+=1;
 
             }
             if(IR.decodedIRData.decodedRawData==0xFD027F00){
             //2
                 inputpasscode+="2";
                 Serial.println(inputpasscode);
+                count+=1;
             }
             if(IR.decodedIRData.decodedRawData==0xFC037F00){
             //3
                 inputpasscode+="3";
                 Serial.println(inputpasscode);
+                count+=1;
             }
             if(IR.decodedIRData.decodedRawData==0xFB047F00){
             //4
                 inputpasscode+="4";
                 Serial.println(inputpasscode);
+                count+=1;
             }
             if(IR.decodedIRData.decodedRawData==0xFA057F00){
             //5
                 inputpasscode+="5";
                 Serial.println(inputpasscode);
+                count+=1;
             }
             if(IR.decodedIRData.decodedRawData==0xF9067F00){
             //6
                 inputpasscode+="6";
                 Serial.println(inputpasscode);
+                count+=1;
             }
             if(IR.decodedIRData.decodedRawData==0xF8077F00){
             //7
                 inputpasscode+="7";
                 Serial.println(inputpasscode);
+                count+=1;
             }
 
             if(IR.decodedIRData.decodedRawData==0xF7087F00){
             //8
                 inputpasscode+="8";
                 Serial.println(inputpasscode);
+                count+=1;
             }
             if(IR.decodedIRData.decodedRawData==0xF6097F00){
             //9
                 inputpasscode+="9";
                 Serial.println(inputpasscode);
+                count+=1;
             }
 
 
         }
         if(count==3 && passcode!=inputpasscode){
         Serial.println("incorrect");
+        count=0;
+        inputpasscode="";
+        IR.resume();
         }
     
-    count+=1;
+    
     IR.resume(); 
     
     }
