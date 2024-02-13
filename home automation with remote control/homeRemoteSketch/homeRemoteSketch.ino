@@ -157,6 +157,7 @@ void loop() {
     if(IR.decodedIRData.decodedRawData==0xFE017F00){
     //1
     digitalWrite(office,HIGH);
+    digitalWrite(led,LOW);
 
     }
     if(IR.decodedIRData.decodedRawData==0xFD027F00){
