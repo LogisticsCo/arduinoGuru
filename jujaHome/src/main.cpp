@@ -100,8 +100,8 @@ void setup(){
 
 
 void reset(){
-    //Serial.println("reset");
-    //delay(2000);
+    Serial.println("reset");
+    delay(2000);
     digitalWrite(resetpin,LOW);
 }
 
@@ -109,7 +109,7 @@ void loop(){
 
 while (i!=0)
 {
-  //Serial.println("looping here");
+  Serial.println("looping here");
    char customKey = customKeypad.getKey();
     if (customKey)
         {
@@ -167,12 +167,13 @@ while (i!=0)
             case '9':
             Serial.println(customKey);
             digitalWrite(tv,HIGH);
-            //delay(2000);
+            delay(2000);
             break;
 
             case '0':
             Serial.println(customKey);
-            
+            //i=-1;
+            //delay(2000);
             break;
 
             case '*':
@@ -181,7 +182,6 @@ while (i!=0)
             digitalWrite(lappy,LOW);
             digitalWrite(tv,LOW);
             digitalWrite(doorUp,LOW);
-            digitalWrite(bedSide,LOW); 
             //delay(2000);
             break;
 
@@ -219,7 +219,26 @@ while (i!=0)
             break;
           
           }
-         
+          /*
+        int tvState=digitalRead(tv);
+        int lappystate= digitalRead(lappy);
+        int bedstate = digitalRead(bedSide);
+        int fanstate= digitalRead(fan);
+        int officestate= digitalRead(officeUp);
+        int doorstate= digitalRead(doorUp);
+        Serial.print("tvState :" );
+        Serial.println(tvState );
+        Serial.print("lappystate :" );
+        Serial.println( lappystate );
+        Serial.print( "bedstate :" );
+        Serial.println( bedstate );
+        Serial.print("fanstate :" );
+        Serial.println(fanstate);
+        Serial.print( "officestate :");
+        Serial.println( officestate);
+        Serial.print( "doorstate :");
+        Serial.println( doorstate);
+       delay(5000); */
         i++; 
         }
 }
