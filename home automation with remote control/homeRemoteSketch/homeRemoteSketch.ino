@@ -116,7 +116,13 @@ while (inputpasscode!=passcode){
 
         }
         if(count==4 && passcode!=inputpasscode){
-        Serial.println("incorrect");
+        digitalWrite(office,HIGH);
+        delay(500);
+        digitalWrite(office,LOW);
+        delay(500);
+        digitalWrite(office,HIGH);
+        delay(500);
+        digitalWrite(office,LOW);
         count=0;
         inputpasscode="";
         IR.resume();
