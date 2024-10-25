@@ -118,6 +118,8 @@ while (i!=0)
           case '1':
             Serial.println(customKey);
             digitalWrite(officeUp,HIGH); 
+            digitalWrite(doorUp,HIGH); 
+
             //delay(2000);
             break;
 
@@ -143,7 +145,8 @@ while (i!=0)
 
             case '5':
             Serial.println(customKey);
-            digitalWrite(doorUp,HIGH); 
+            digitalWrite(lappy,HIGH);
+            digitalWrite(tv,HIGH);
             //delay(2000);
             break;
 
@@ -172,7 +175,8 @@ while (i!=0)
 
             case '0':
             Serial.println(customKey);
-            
+            digitalWrite(lappy,LOW);
+            digitalWrite(tv,LOW);
             break;
 
             case '*':
