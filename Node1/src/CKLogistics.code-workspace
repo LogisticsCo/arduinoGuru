@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "../../CKLogistics"
+		},
+		{
+			"name": "Node1",
+			"path": ".."
+		},
+		{
+			"name": "Node2_peer",
+			"path": "../../Node2_peer"
+		}
+	],
+	"settings": {}
+}
