@@ -12,8 +12,8 @@ const char *MQTT_TOPIC = "Logistics/lorawan/gps";
 
 const char *MQTT_CLIENT_ID = "esp32logistics";
 const char *MQTT_USERNAME = "cklogistics";
-const char *MQTT_PASSWORD = "uZlp3Dbsk6wYqWGe";
-
+const char *MQTT_PASSWORD = "public";
+ 
 String id, Data, Data1, Data2;
 
 WiFiClient client;
