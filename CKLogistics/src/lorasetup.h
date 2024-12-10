@@ -12,7 +12,7 @@
 #define led_data 14
 #define led_eth 13
 
-#define BAUD_RATE 115200
+#define BAUD_RATE 9600
 
 const long frequency = 433E6; // LoRa Frequency
 

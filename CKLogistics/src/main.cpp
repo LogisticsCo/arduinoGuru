@@ -1,74 +1,54 @@
 #include "lorasetup.h"
-#include <WiFi.h>
-#include <MQTTPubSubClient.h>
-#include <WiFiUdp.h>
-#include <ArduinoOTA.h>
 #include <Arduino.h>
 
-const char *SSID = "KASRI";
-const char *PASS = "@Freezy#254";
-const char *MQTT_SERVER = "cklogistics.cloud.shiftr.io";
-const char *MQTT_TOPIC = "Logistics/lorawan/gps";
 
-const char *MQTT_CLIENT_ID = "esp32logistics";
-const char *MQTT_USERNAME = "cklogistics";
-const char *MQTT_PASSWORD = "public";
- 
+const char *APN = "safaricom";  // Safaricom APN
+const char *HTTP_SERVER = "https://cklogistics-h9bxfpgsaqf3duab.canadacentral-01.azurewebsites.net/backend/coordinates/";  // Replace with your server's URL
+
+HardwareSerial mySerial(1);  // Using Serial1 for communication with SIM800L
+
 String id, Data, Data1, Data2;
 
-WiFiClient client;
-MQTTPubSubClient mqtt;
-
-void setup_wifi() {
-  connect_to_wifi:
-  Serial.print("Connecting to WiFi...");
-  while (WiFi.status() != WL_CONNECTED) {
-      Serial.print(".");
-      delay(1000);
-  }
-  Serial.println(" connected!");
-
-  connect_to_host:
-  Serial.print("Connecting to host...");
-  client.stop();
-  while (!client.connect(MQTT_SERVER, 1883)) {
-      Serial.print(".");
-      delay(1000);
-      if (WiFi.status() != WL_CONNECTED) {
-          Serial.println("WiFi disconnected");
-          goto connect_to_wifi;
-      }
-  }
-  Serial.println(" connected!");
-
-  Serial.print("Connecting to MQTT broker...");
-  mqtt.disconnect();
-  while (!mqtt.connect("arduino", MQTT_USERNAME, MQTT_PASSWORD)) {
-      Serial.print(".");
-      delay(1000);
-      if (WiFi.status() != WL_CONNECTED) {
-          Serial.println("WiFi disconnected");
-          goto connect_to_wifi;
-      }
-      if (client.connected() != 1) {
-          Serial.println("WiFiClient disconnected");
-          goto connect_to_host;
-      }
-  }
-  Serial.println(" connected!");
+void setup_sim800l() {
+  mySerial.begin(9600, SERIAL_8N1, 26, 27);  // Initialize Serial1 at 9600 baud, RX=26, TX=27
+  delay(1000);
+  mySerial.println("AT");
+  delay(1000);
+  mySerial.println("AT+CSQ");  // Check signal quality
+  delay(1000);
+  mySerial.println("AT+CGATT=1");  // Attach to GPRS
+  delay(1000);
+  mySerial.println("AT+CGDCONT=1,\"IP\",\"" + String(APN) + "\"");  // Set APN for the GPRS connection
+  delay(1000);
+  mySerial.println("AT+CGACT=1,1");  // Activate GPRS
+  delay(2000);
 }
 
-// Function to publish received data to MQTT
-void sendToMQTT(const String &id, const String &data) {
-  String topic = String(MQTT_TOPIC) + "/" + id;
-  if (mqtt.publish(topic.c_str(), data.c_str())) {
-      Serial.print("Data sent to MQTT: ");
-      Serial.print(topic);
-      Serial.print(" -> ");
-      Serial.println(data);
-  } else {
-      Serial.println("Failed to send data to MQTT.");
+void sendDataToHTTP(const String &id, const String &data) {
+  String postData = "id=" + id + "&data=" + data;
+  
+  mySerial.println("AT+HTTPINIT");  
+  delay(1000);
+  mySerial.println("AT+HTTPPARA=\"CID\",1");  
+  delay(1000);
+  mySerial.println("AT+HTTPPARA=\"URL\",\"" + String(HTTP_SERVER) + "\"");  
+  delay(1000);
+  mySerial.println("AT+HTTPPARA=\"CONTENT\",\"application/x-www-form-urlencoded\"");  
+  delay(1000);
+  mySerial.println("AT+HTTPDATA=" + String(postData.length()) + ",10000");  
+  delay(1000);
+  mySerial.println(postData);  
+  delay(1000);
+  mySerial.println("AT+HTTPACTION=1"); 
+  delay(1000);
+
+  String response = "";
+  while (mySerial.available()) {
+    response += (char)mySerial.read();
   }
+  
+  Serial.print("HTTP response: ");
+  Serial.println(response);  
 }
 
 void onReceive(int packetSize) {
@@ -76,29 +56,25 @@ void onReceive(int packetSize) {
   String message = "";
 
   while (LoRa.available()) {
-      message += (char)LoRa.read();
+    message += (char)LoRa.read();
   }
 
   len_ID = message.indexOf(",");
   len_DT = message.indexOf("#");
 
-  id = message.substring(0, len_ID);          // parsing id
-  Data = message.substring(len_ID + 1, len_DT); // parsing data
+  id = message.substring(0, len_ID);  
+  Data = message.substring(len_ID + 1, len_DT); 
 
   if (id == "001") {
-      Data1 = Data;
-      Serial.print("001, ");
-      Serial.println(Data1);
-      sendToMQTT(id, Data1); // Send to MQTT
-      Serial.print("RSSI: ");
-      Serial.println(LoRa.packetRssi());
+    Data1 = Data;
+    Serial.print("001, ");
+    Serial.println(Data1);
+    sendDataToHTTP(id, Data1);  
   } else if (id == "002") {
-      Data2 = Data;
-      Serial.print("002, ");
-      Serial.println(Data2);
-      sendToMQTT(id, Data2); // Send to MQTT
-      Serial.print("RSSI: ");
-      Serial.println(LoRa.packetRssi());
+    Data2 = Data;
+    Serial.print("002, ");
+    Serial.println(Data2);
+    sendDataToHTTP(id, Data2);  
   }
 }
 
@@ -106,62 +82,27 @@ boolean runEvery(unsigned long interval) {
   static unsigned long previousMillis = 0;
   unsigned long currentMillis = millis();
   if (currentMillis - previousMillis >= interval) {
-      previousMillis = currentMillis;
-      return true;
+    previousMillis = currentMillis;
+    return true;
   }
   return false;
 }
 
-void reconnect() {
-  WiFi.begin(SSID, PASS);
-  mqtt.begin(client);
-  setup_wifi();
-}
-
 void setup() {
   setupSerial();
-  WiFi.begin(SSID, PASS);
-  mqtt.begin(client);
-  setup_wifi();
-
-  ArduinoOTA.onStart([]() {
-      String type;
-      if (ArduinoOTA.getCommand() == U_FLASH)
-          type = "sketch";
-      else // U_SPIFFS
-          type = "filesystem";
-
-      Serial.println("Start updating " + type);
-  }).onEnd([]() {
-      Serial.println("\nEnd");
-  }).onProgress([](unsigned int progress, unsigned int total) {
-      Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
-  }).onError([](ota_error_t error) {
-      Serial.printf("Error[%u]: ", error);
-      if (error == OTA_AUTH_ERROR) Serial.println("Auth Failed");
-      else if (error == OTA_BEGIN_ERROR) Serial.println("Begin Failed");
-      else if (error == OTA_CONNECT_ERROR) Serial.println("Connect Failed");
-      else if (error == OTA_RECEIVE_ERROR) Serial.println("Receive Failed");
-      else if (error == OTA_END_ERROR) Serial.println("End Failed");
-  });
-
-  ArduinoOTA.begin();
-  client.connect(MQTT_SERVER, 1883);
+  setup_sim800l();  
   setupLoRa();
   LoRa.onReceive(onReceive);
   LoRa_rxMode();
 }
 
 void loop() {
-  ArduinoOTA.handle();
-  if (!client.connect(MQTT_SERVER, 1883)) {
-      reconnect();
-  }
+  
   if (runEvery(2500)) {
-      Serial.println("LoRa-Gateway:01, Site->Cklogistics");
-      Serial.print("01: ");
-      Serial.println(Data1);
-      Serial.print("02: ");
-      Serial.println(Data2);
+    Serial.println("LoRa-Gateway:01, Site->Cklogistics");
+    Serial.print("01: ");
+    Serial.println(Data1);
+    Serial.print("02: ");
+    Serial.println(Data2);
   }
 }

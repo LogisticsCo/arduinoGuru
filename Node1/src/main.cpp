@@ -1,8 +1,6 @@
 #include "lorasetup.h"
 #include <Arduino.h>
 #include <ArduinoJson.h>
-#include <DHT.h>
-#include <DHT_U.h>
 #include <TinyGPSPlus.h>
 #include <SoftwareSerial.h>
 static const int RXPin = 14, TXPin = 13;
@@ -85,11 +83,11 @@ void loop()
 {
   
   if (runEvery(2500))
-  {                            // repeat every 1000 millis
-    String message = "001,";   // id
-    message += buffer;         // kirim data millis,
-    message += "#";            // tanda akhir data
-    LoRa_sendMessage(message); // send a message
+  {                            
+    String message = "001,";   
+    message += buffer;         
+    message += "#";           
+    LoRa_sendMessage(message);
     Serial.println("Message sent: " + message);
   }
 }
