@@ -2,26 +2,27 @@
 #include <Arduino.h>
 
 
-const char *APN = "safaricom";  // Safaricom APN
+const char *APN = "safaricom"; 
 const char *HTTP_SERVER = "https://cklogistics-h9bxfpgsaqf3duab.canadacentral-01.azurewebsites.net/backend/coordinates/";  // Replace with your server's URL
 
-HardwareSerial mySerial(1);  // Using Serial1 for communication with SIM800L
+HardwareSerial mySerial(1);  
 
 String id, Data, Data1, Data2;
 
 void setup_sim800l() {
-  mySerial.begin(9600, SERIAL_8N1, 26, 27);  // Initialize Serial1 at 9600 baud, RX=26, TX=27
+  mySerial.begin(9600, SERIAL_8N1, 26, 27);  
   delay(1000);
   mySerial.println("AT");
   delay(1000);
-  mySerial.println("AT+CSQ");  // Check signal quality
+  mySerial.println("AT+CSQ");  
   delay(1000);
-  mySerial.println("AT+CGATT=1");  // Attach to GPRS
+  mySerial.println("AT+CGATT=1");  
   delay(1000);
   mySerial.println("AT+CGDCONT=1,\"IP\",\"" + String(APN) + "\"");  // Set APN for the GPRS connection
   delay(1000);
-  mySerial.println("AT+CGACT=1,1");  // Activate GPRS
+  mySerial.println("AT+CGACT=1,1");  
   delay(2000);
+  Serial.println("setup complete for gsm");
 }
 
 void sendDataToHTTP(const String &id, const String &data) {

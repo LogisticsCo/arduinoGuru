@@ -6,24 +6,41 @@
 static const int RXPin = 14, TXPin = 13;
 static const uint32_t GPSBaud = 9600;
 
-
+float tempRead = 22;
+float  humdRead = 43;
 TinyGPSPlus gps;
 SoftwareSerial ss(RXPin, TXPin);
 
 
+struct Coordinates {
+  float latitude;
+  float longitude;
+};
 
-void loop() {
-	// This sketch displays information every time a new sentence is correctly encoded.
-	while (ss.available() > 0) {
-		if (gps.encode(ss.read())) {
-			displayInfo();
-		}
-	}
-
-	if (millis() > 5000 && gps.charsProcessed() < 10) {
-		Serial.println(F("No GPS detected: check wiring."));
-		while(true);
-	}
+Coordinates displayInfo() {
+  Coordinates coords = {0.0, 0.0}; // Initialize to 0.0
+  
+  if (gps.location.isValid()) {
+    coords.latitude = gps.location.lat();
+    coords.longitude = gps.location.lng();
+    
+    char latBuffer[15];
+    char lngBuffer[15];
+    
+    
+    dtostrf(coords.latitude, 10, 6, latBuffer);
+    dtostrf(coords.longitude, 10, 6, lngBuffer);
+    
+    
+    Serial.print(F("Latitude: "));
+    Serial.println(latBuffer);
+    Serial.print(F("Longitude: "));
+    Serial.println(lngBuffer);
+  } else {
+    Serial.println(F("Location: INVALID"));
+  }
+  
+  return coords; 
 }
 
 char buffer[256];
@@ -81,53 +98,28 @@ void setup()
 
 void loop()
 {
-  
   if (runEvery(2500))
-  {                            
-    String message = "001,";   
-    message += buffer;         
-    message += "#";           
-    LoRa_sendMessage(message);
-    Serial.println("Message sent: " + message);
-  }
+	 {                            
+	   String message = "001,";   
+	   message += Coordinates;         
+	   message += "#";           
+	   LoRa_sendMessage(message);
+	   Serial.println("Message sent: " + message);
+	 }
 }
-void displayInfo() {
-	Serial.print(F("Location: ")); 
-	if (gps.location.isValid()) {
-		Serial.print(gps.location.lat(), 6);
-		Serial.print(F(","));
-		Serial.print(gps.location.lng(), 6);
-	} else {
-		Serial.print(F("INVALID"));
-	}
 
-	Serial.print(F("  Date/Time: "));
-	if (gps.date.isValid()) {
-		Serial.print(gps.date.month());
-		Serial.print(F("/"));
-		Serial.print(gps.date.day());
-		Serial.print(F("/"));
-		Serial.print(gps.date.year());
-	} else {
-		Serial.print(F("INVALID"));
-	}
 
-	Serial.print(F(" "));
-	if (gps.time.isValid()) {
-		if (gps.time.hour() < 10) Serial.print(F("0"));
-		Serial.print(gps.time.hour());
-		Serial.print(F(":"));
-		if (gps.time.minute() < 10) Serial.print(F("0"));
-		Serial.print(gps.time.minute());
-		Serial.print(F(":"));
-		if (gps.time.second() < 10) Serial.print(F("0"));
-		Serial.print(gps.time.second());
-		Serial.print(F("."));
-		if (gps.time.centisecond() < 10) Serial.print(F("0"));
-		Serial.print(gps.time.centisecond());
-	} else {
-		Serial.print(F("INVALID"));
-	}
+void loop() {
+	// This sketch displays information every time a new sentence is correctly encoded.
+	while (ss.available() > 0) {
+		if (gps.encode(ss.read())) {
+			displayInfo();
 
-	Serial.println();
+		}
+	}
+	
+	if (millis() > 5000 && gps.charsProcessed() < 10) {
+		Serial.println(F("No GPS detected: check wiring."));
+		while(true);
+	}
 }
