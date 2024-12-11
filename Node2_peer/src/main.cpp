@@ -54,7 +54,6 @@ void setup()
 {
   setupSerial();
   testSerial();
-  dht.begin();
   setupLoRa();
   LoRa.onReceive(onReceive);
   LoRa_rxMode();

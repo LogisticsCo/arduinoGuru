@@ -44,7 +44,7 @@ void setupLoRa()
             digitalWrite(led_data, LOW);
             delay(100);
             while (true)
-                  ; // if failed, do nothing
+                  Serial.println("failed"); // if failed, do nothing
       }
       digitalWrite(led_data, LOW);
       Serial.println("LoRa init succeeded.");
@@ -76,3 +76,4 @@ void LoRa_sendMessage(String message)
       LoRa.endPacket();    // finish packet and send it
       LoRa_rxMode();       // set rx mode
 }
+
