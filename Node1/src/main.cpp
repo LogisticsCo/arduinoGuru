@@ -3,6 +3,7 @@
 #include <ArduinoJson.h>
 #include <TinyGPSPlus.h>
 #include <SoftwareSerial.h>
+
 static const int RXPin = 14, TXPin = 13;
 static const uint32_t GPSBaud = 9600;
 
@@ -10,10 +11,10 @@ TinyGPSPlus gps;
 SoftwareSerial ss(RXPin, TXPin);
 float latitude;
 float longitude;
-float orderNo;
+String id = "001";
+String od = "IUG214";
 
 char buffer[256];
-
 char latBuffer[15];
 char lngBuffer[15];
 
@@ -27,6 +28,7 @@ void onReceive(int packetSize)
   Serial.print("Node Receive: ");
   Serial.println(message);
 }
+
 boolean runEvery(unsigned long interval)
 {
   static unsigned long previousMillis = 0;
@@ -38,7 +40,6 @@ boolean runEvery(unsigned long interval)
   }
   return false;
 }
-
 
 void setup()
 {
@@ -53,31 +54,23 @@ void setup()
 
 void loop()
 {
-  
   if (runEvery(5000))
-	 {                            
-	   String message = "001,";  
-     if (gps.encode(ss.read())) {
-			latitude = gps.location.lat();
-      Serial.println(latitude);
+  {                             
+    String message = id + "," + od + ",";
+    
+    if (gps.encode(ss.read())) {
+      latitude = gps.location.lat();
       longitude = gps.location.lng();
-      
-    
-    
+    }
 
-		} 
-     
-      dtostrf(latitude, 10, 6, latBuffer);
-      dtostrf(longitude, 10, 6, lngBuffer);
+    dtostrf(latitude, 10, 6, latBuffer);
+    dtostrf(longitude, 10, 6, lngBuffer);
 
-	   message += "OrderNo: ";
-     message += "lat:";
-     message += latBuffer;
-     message += "long:";
-     message += lngBuffer;         
-	   message += "#";           
-	   LoRa_sendMessage(message);
-	   Serial.println("Message sent: " + message);
+    message += "lat:" + String(latBuffer) + ",";
+    message += "lon:" + String(lngBuffer);
+    message += "#";
     
-	 }
+    LoRa_sendMessage(message);
+    Serial.println("Message sent: " + message);
+  }
 }

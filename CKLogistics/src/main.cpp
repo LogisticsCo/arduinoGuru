@@ -1,9 +1,8 @@
 #include "lorasetup.h"
 #include <Arduino.h>
 
-
 const char *APN = "safaricom"; 
-const char *HTTP_SERVER = "https://cklogistics-h9bxfpgsaqf3duab.canadacentral-01.azurewebsites.net/backend/coordinates/";  // Replace with your server's URL
+const char *HTTP_SERVER = "https://cklogisticsback.onrender.com/backend/coordinates/"; 
 
 HardwareSerial mySerial(1);  
 
@@ -18,30 +17,30 @@ void setup_sim800l() {
   delay(1000);
   mySerial.println("AT+CGATT=1");  
   delay(1000);
-  mySerial.println("AT+CGDCONT=1,\"IP\",\"" + String(APN) + "\"");  // Set APN for the GPRS connection
+  mySerial.println("AT+CGDCONT=1,\"IP\",\"" + String(APN) + "\"");  
   delay(1000);
   mySerial.println("AT+CGACT=1,1");  
   delay(2000);
   Serial.println("setup complete for gsm");
 }
 
-void sendDataToHTTP(const String &id, const String &data) {
-  String postData = "id=" + id + "&data=" + data;
-  
+void sendDataToHTTP(const String &od, const String &lat, const String &lon) {
+  String jsonData = "{\"od\":\"" + od + "\",\"lat\":\"" + lat + "\",\"lon\":\"" + lon + "\"}";
+
   mySerial.println("AT+HTTPINIT");  
   delay(1000);
   mySerial.println("AT+HTTPPARA=\"CID\",1");  
   delay(1000);
   mySerial.println("AT+HTTPPARA=\"URL\",\"" + String(HTTP_SERVER) + "\"");  
   delay(1000);
-  mySerial.println("AT+HTTPPARA=\"CONTENT\",\"application/x-www-form-urlencoded\"");  
+  mySerial.println("AT+HTTPPARA=\"CONTENT\",\"application/json\"");  
   delay(1000);
-  mySerial.println("AT+HTTPDATA=" + String(postData.length()) + ",10000");  
+  mySerial.println("AT+HTTPDATA=" + String(jsonData.length()) + ",10000");  
   delay(1000);
-  mySerial.println(postData);  
+  mySerial.println(jsonData);  
   delay(1000);
-  mySerial.println("AT+HTTPACTION=1"); 
-  delay(1000);
+  mySerial.println("AT+HTTPACTION=1");  
+  delay(5000);  
 
   String response = "";
   while (mySerial.available()) {
@@ -53,30 +52,31 @@ void sendDataToHTTP(const String &id, const String &data) {
 }
 
 void onReceive(int packetSize) {
-  int len_ID, len_DT;
   String message = "";
-
   while (LoRa.available()) {
     message += (char)LoRa.read();
   }
 
-  len_ID = message.indexOf(",");
-  len_DT = message.indexOf("#");
+  int len_ID = message.indexOf(",");
+  int len_OD = message.indexOf(",", len_ID + 1);
+  int len_LAT = message.indexOf(",", len_OD + 1);
+  int len_LON = message.indexOf("#");
 
-  id = message.substring(0, len_ID);  
-  Data = message.substring(len_ID + 1, len_DT); 
+  String id = message.substring(0, len_ID);  
+  String od = message.substring(len_ID + 1, len_OD);  
+  String lat = message.substring(len_OD + 1, len_LAT);  
+  String lon = message.substring(len_LAT + 1, len_LON);  
 
-  if (id == "001") {
-    Data1 = Data;
-    Serial.print("001, ");
-    Serial.println(Data1);
-    sendDataToHTTP(id, Data1);  
-  } else if (id == "002") {
-    Data2 = Data;
-    Serial.print("002, ");
-    Serial.println(Data2);
-    sendDataToHTTP(id, Data2);  
-  }
+  Serial.print("ID: ");
+  Serial.println(id);
+  Serial.print("Order ID (od): ");
+  Serial.println(od);
+  Serial.print("Latitude: ");
+  Serial.println(lat);
+  Serial.print("Longitude: ");
+  Serial.println(lon);
+
+  sendDataToHTTP(od, lat, lon);
 }
 
 boolean runEvery(unsigned long interval) {
@@ -98,12 +98,11 @@ void setup() {
 }
 
 void loop() {
-  
   if (runEvery(2500)) {
-    Serial.println("LoRa-Gateway:01, Site->Cklogistics");
-    Serial.print("01: ");
-    Serial.println(Data1);
-    Serial.print("02: ");
-    Serial.println(Data2);
+    
+    Serial.println("Sending data to API every 2500ms");
+    
+    
+    sendDataToHTTP("IUG214", "12.3456", "-78.9012"); 
   }
 }
