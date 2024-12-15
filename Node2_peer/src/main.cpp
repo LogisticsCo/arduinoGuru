@@ -2,13 +2,7 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 
-
-float tempRead;
-float humdRead;
-
 char buffer[256];
-
-
 
 void onReceive(int packetSize)
 {
@@ -20,6 +14,7 @@ void onReceive(int packetSize)
   Serial.print("Node Receive: ");
   Serial.println(message);
 }
+
 boolean runEvery(unsigned long interval)
 {
   static unsigned long previousMillis = 0;
@@ -30,24 +25,6 @@ boolean runEvery(unsigned long interval)
     return true;
   }
   return false;
-}
-
-void DHT_config()
-{
-  tempRead = 22;
-  humdRead = 43;
-
-  if (isnan(tempRead) || isnan(humdRead))
-  {
-    return;
-  }
-  JsonDocument doc;
-  JsonArray data = doc["DHT"].to<JsonArray>();
-  data.add(tempRead);
-  data.add(humdRead);
-
-  serializeJson(doc, buffer);
-  serializeJsonPretty(doc, Serial);
 }
 
 void setup()
@@ -62,9 +39,8 @@ void setup()
 
 void loop()
 {
-  DHT_config();
   if (runEvery(2500))
-  {                            
+  {                             
     String message = "002,";   
     message += buffer;         
     message += "#";            
