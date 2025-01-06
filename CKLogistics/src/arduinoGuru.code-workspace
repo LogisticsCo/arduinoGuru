@@ -5,6 +5,10 @@
 		},
 		{
 			"path": "../../../Logisticsweb"
+		},
+		{
+			"name": "Node1",
+			"path": "../../Node1"
 		}
 	],
 	"settings": {}
