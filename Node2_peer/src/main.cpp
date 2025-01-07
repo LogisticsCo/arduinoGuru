@@ -1,50 +1,50 @@
-#include "lorasetup.h"
+
 #include <Arduino.h>
 #include <ArduinoJson.h>
+#include <LoRa.h>
+#include "lorasetup.h"
 
-char buffer[256];
+#define LORA_SS 5
+#define LORA_RST 14
+#define LORA_DIO0 2
 
-void onReceive(int packetSize)
-{
-  String message = "";
-  while (LoRa.available())
-  {
-    message += (char)LoRa.read();
+#define PEER_2_ADDR 2
+#define PEER_1_ADDR 1
+#define GATEWAY_ADDR 255
+
+// Task to receive data from Peer 1 and forward to the Gateway if needed
+void Task_Peer_2(void *pvParameters) {
+  while (true) {
+    if (LoRa.available()) {
+      String data = LoRa.readString();
+      byte senderAddress = LoRa.read();  // Read sender address from LoRa packet
+      
+      // If data is received from Peer 1, forward it to the gateway
+      if (senderAddress == PEER_1_ADDR) {
+        LoRa.beginPacket();
+        LoRa.write(GATEWAY_ADDR);  // Forward to Gateway
+        LoRa.print(data);
+        LoRa.endPacket();
+        Serial.println("Peer 2 forwarded data from Peer 1 to Gateway.");
+      }
+    }
+    vTaskDelay(10 / portTICK_PERIOD_MS);  // Task delay to allow other tasks to run
   }
-  Serial.print("Node Receive: ");
-  Serial.println(message);
 }
 
-boolean runEvery(unsigned long interval)
-{
-  static unsigned long previousMillis = 0;
-  unsigned long currentMillis = millis();
-  if (currentMillis - previousMillis >= interval)
-  {
-    previousMillis = currentMillis;
-    return true;
+void setup() {
+  Serial.begin(9600);
+  
+  // Initialize LoRa
+  LoRa.setPins(LORA_SS, LORA_RST, LORA_DIO0);
+  if (!LoRa.begin(433E6)) {
+    Serial.println("Starting LoRa failed!");
+    while (1); 
   }
-  return false;
+
+  
+  xTaskCreate(Task_Peer_2, "Task_Peer_2", 2048, NULL, 1, NULL);
 }
 
-void setup()
-{
-  setupSerial();
-  testSerial();
-  setupLoRa();
-  LoRa.onReceive(onReceive);
-  LoRa_rxMode();
-  Serial.println("LoRa Nodes-1");
-}
-
-void loop()
-{
-  if (runEvery(2500))
-  {                             
-    String message = "002,";   
-    message += buffer;         
-    message += "#";            
-    LoRa_sendMessage(message); 
-    Serial.println("Message sent: " + message);
-  }
+void loop() {
 }

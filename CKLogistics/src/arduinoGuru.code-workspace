@@ -9,6 +9,14 @@
 		{
 			"name": "Node1",
 			"path": "../../Node1"
+		},
+		{
+			"name": "CKLogistics",
+			"path": ".."
+		},
+		{
+			"name": "Node2_peer",
+			"path": "../../Node2_peer"
 		}
 	],
 	"settings": {}
