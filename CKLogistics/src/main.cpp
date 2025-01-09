@@ -1,112 +1,97 @@
 #include <Arduino.h>
+#include <LoRa.h>
+#include <ArduinoJson.h>
 #include <SoftwareSerial.h>
 #include <ArduinoJson.h>
 #include "comms.h"
 #include "lorasetup.h"
 #include <LoRa.h>
 
-#define LORA_SS 5
-#define LORA_RST 14
-#define LORA_DIO0 2
+// LoRa module configuration
+#define LORA_SS 15
+#define LORA_RST 12
+#define LORA_DIO0 4
 
+#define PEER_1_ADDR 2
+#define PEER_2_ADDR 1
 #define GATEWAY_ADDR 255
-#define PEER_1_ADDR 1
-#define PEER_2_ADDR 2
 
-// Queue to store received data from LoRa
-QueueHandle_t loraQueue;
+unsigned long lastPublishTime = 0;
+const unsigned long publishInterval = 10000;  // Publish interval in milliseconds
 
-void Task_Gateway(void *pvParameters) {
-  while (true) {
-    if (LoRa.available()) {
-      String data = LoRa.readString();
-      byte senderAddress = LoRa.read();
+String node = "";  // Variable to identify the sender node
+String od = "";    // Variable to store the selected string
+String lat = "0.000000";  // Default latitude
+String lon = "0.000000";  // Default longitude
+void parseMessage(int sender, const String& message, int rssi) {
+    int selectedStringIndex = message.indexOf("Selected String: ");
+    int latIndex = message.indexOf(", Lat: ");
+    int lonIndex = message.indexOf(", Lon: ");
 
-      // Prepare message for the queue
-      String message;
-      if (senderAddress == PEER_1_ADDR) {
-        message = "Peer 1: " + data;
-        Serial.println("Gateway received data from Peer 1: " + data);
-      } else if (senderAddress == PEER_2_ADDR) {
-        message = "Peer 2: " + data;
-        Serial.println("Gateway received data from Peer 2: " + data);
-      } else {
-        message = "Unknown Peer: " + data;
-        Serial.println("Gateway received data from an unknown peer");
-      }
+    // Validate and extract data from the message
+    if (selectedStringIndex != -1 && latIndex != -1 && lonIndex != -1) {
+        node = String(sender);  // Assign the sender's address as the node identifier
+        od = message.substring(selectedStringIndex + 17, latIndex);
+        lat = message.substring(latIndex + 7, lonIndex);
+        lon = message.substring(lonIndex + 7);
 
-      // Send the message to the queue
-      if (xQueueSend(loraQueue, message.c_str(), pdMS_TO_TICKS(100)) != pdPASS) {
-        Serial.println("Queue full, message dropped");
-      }
+        Serial.printf("Parsed values - Node: %s, od: %s, lat: %s, lon: %s\n", node.c_str(), od.c_str(), lat.c_str(), lon.c_str());
+    } else {
+        Serial.println("Failed to parse message.");
     }
-    vTaskDelay(10 / portTICK_PERIOD_MS);  // Prevent task from hogging the CPU
-  }
 }
 
-void Task_MQTT(void *pvParameters) {
-  char message[256];
+void publishToMQTT() {
+    // Create a JSON object
+    StaticJsonDocument<256> jsonDoc;
+    jsonDoc["node"] = node;
+    jsonDoc["od"] = od;
+    jsonDoc["lat"] = lat;
+    jsonDoc["lon"] = lon;
 
-  while (true) {
-    // Wait for data from the queue
-    if (xQueueReceive(loraQueue, &message, portMAX_DELAY)) {
-      Serial.println("MQTT Task: Sending data via MQTT -> " + String(message));
+    String jsonData;
+    serializeJson(jsonDoc, jsonData);
 
-      // Publish the message via MQTT
-      if (!mqttClient.connected()) {
-        reconnect();
-      }
-
-      mqttClient.loop();
-
-      if (mqttClient.publish(topic, message)) {
-        Serial.println("MQTT: Message published successfully -> " + String(message));
-      } else {
-        Serial.println("MQTT: Failed to publish message -> " + String(message));
-      }
-    }
-
-    vTaskDelay(100 / portTICK_PERIOD_MS); 
-  }
+    String status = gsmMqtt(jsonData);  
+    Serial.println("Publish status: " + status);
 }
-
 void setup() {
-  Serial.begin(9600);
+    Serial.begin(9600);  // Initialize Serial monitor
 
-  // Initialize LoRa
-  LoRa.setPins(LORA_SS, LORA_RST, LORA_DIO0);
-  if (!LoRa.begin(433E6)) {
-    Serial.println("Starting LoRa failed!");
-    while (1);
-  }
-
-  // Initialize GSM and MQTT
-  SerialAT.begin(GSM_BAUD);
-  delay(1000);
-  modem.restart();
-  String modemInfo = modem.getModemInfo();
-  Serial.println("Modem Info: " + modemInfo);
-  Serial.println("Connecting to the GSM network...");
-  if (!modem.gprsConnect(apn, gprsUser, gprsPass)) {
-    Serial.println("Failed to connect to GPRS.");
-    return;
-  }
-  Serial.println("Connected to GPRS.");
-
-  mqttClient.setServer(mqttServer, mqttPort);
-  mqttClient.setCallback(callback);
-
-  loraQueue = xQueueCreate(10, 256);  
-  if (loraQueue == NULL) {
-    Serial.println("Error creating the queue!");
-    while (1);
-  }
-
-  
-  xTaskCreate(Task_Gateway, "Task_Gateway", 2048, NULL, 1, NULL);
-  xTaskCreate(Task_MQTT, "Task_MQTT", 2048, NULL, 1, NULL);
+    // Initialize LoRa
+    LoRa.setPins(LORA_SS, LORA_RST, LORA_DIO0);
+    if (!LoRa.begin(433E6)) {
+        Serial.println("Starting LoRa failed!");
+        while (1);
+    }
+    Serial.println("LoRa initialized successfully!");
 }
 
 void loop() {
-  // The loop is not used since tasks handle the workload
+    int packetSize = LoRa.parsePacket();
+    if (packetSize) {
+        int sender = LoRa.read();
+        byte receiver = LoRa.read();
+        String incomingMessage = "";
+
+        // Read the incoming message
+        while (LoRa.available()) {
+            incomingMessage += (char)LoRa.read();
+        }
+
+        int rssi = abs(LoRa.packetRssi());  
+        Serial.printf("Received from address %d (RSSI: %d): %s\n", sender, rssi, incomingMessage.c_str());
+
+        // Process message only if it is addressed to this gateway
+        if (receiver == GATEWAY_ADDR) {
+            parseMessage(sender, incomingMessage, rssi);
+        }
+    }
+
+    // Publish data to MQTT at regular intervals
+    if (millis() - lastPublishTime >= publishInterval) {
+        lastPublishTime = millis();
+        publishToMQTT();
+    }
 }
+

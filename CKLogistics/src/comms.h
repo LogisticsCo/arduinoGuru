@@ -53,22 +53,19 @@ void reconnect() {
   }
 }
 
-String gsmMqtt(String od, String lat, String lon) {
+String gsmMqtt(String jsonData) {
   if (!mqttClient.connected()) {
     reconnect();
   }
 
   mqttClient.loop();
 
-  // Format the data as a single string: "od=IUG214,lat=-1.203010,lon=36.917643"
-  String message = "od=" + od + ",lat=" + lat + ",lon=" + lon;
-
-  // Publish the formatted string
-  if (mqttClient.publish(topic, message.c_str())) {
-    Serial.println("Message published successfully: " + message);
+  // Publish the JSON-formatted string
+  if (mqttClient.publish(topic, jsonData.c_str())) {
+    Serial.println("JSON message published successfully: " + jsonData);
     return "Success";
   } else {
-    Serial.println("Failed to publish message: " + message);
+    Serial.println("Failed to publish JSON message: " + jsonData);
     return "Fail";
   }
 }
